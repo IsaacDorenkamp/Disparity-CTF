@@ -92,6 +92,11 @@ var Data = {
 			evt.cancelBubble = true;
 		}
 		
+		var form = document.getElementById('login-form');
+		if( !form ){
+			return;
+		}
+		
 		var xhr = GetXHR();
 		
 		xhr.onreadystatechange = function(){
@@ -111,8 +116,6 @@ var Data = {
 				}
 			}
 		}
-		
-		var form = document.forms[0];
 		var user = form.elements['user'].value;
 		var pass = form.elements['pwd'].value;
 		
@@ -128,6 +131,11 @@ var Data = {
 			evt.stopPropagation();
 		}else{
 			evt.cancelBubble = true;
+		}
+		
+		var form = document.getElementById('signup-form');
+		if( !form ){
+			return;
 		}
 		
 		var xhr = GetXHR();
@@ -149,8 +157,6 @@ var Data = {
 				}
 			}
 		}
-		
-		var form = document.forms[1];
 		var user = form.elements['user'].value;
 		var pass = form.elements['pwd'].value;
 		var email = form.elements['email'].value;

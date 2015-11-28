@@ -75,7 +75,7 @@
 			<div id="user">
 				<?php
 					if( $logged_in ){
-						echo 'Welcome, ' . $_SESSION['User'] . '.';
+						echo 'Welcome, ' . htmlentities($_SESSION['User']) . '.';
 					}else{
 						echo 'Please sign in to participate in Disparity.';
 					}
@@ -92,7 +92,7 @@
 					Log In
 					<img src="x.png" onclick="Data.HideDialog('Login')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignIn(event)">
+				<form onsubmit="Data.SignIn(event)" id="login-form">
 					<table>
 						<tbody>
 							<tr>
@@ -113,7 +113,7 @@
 					Register
 					<img src="x.png" onclick="Data.HideDialog('Register')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignUp(event)">
+				<form onsubmit="Data.SignUp(event)" id="signup-form">
 					<table>
 						<tbody>
 							<tr>

@@ -36,6 +36,7 @@
 		<title>Disparity CTF -- Scoreboard</title>
 		<link rel="stylesheet" href="style.css" />
 		<script src="home.js"></script>
+		<script src="dashboard.js"></script>
 	</head>
 	<body>
 		<div id="head">
@@ -77,16 +78,28 @@
 						$counter = 1;
 						
 						do{ //Second effective use of do-while loop!
-							$name = $row['name'];
-							$email = $row['email'];
-							$role = $row['role'];
-							$id = $row['user_id'];
+							$name = htmlentities($row['name']);
+							$email = htmlentities($row['email']);
+							$rawrole = htmlentities($row['role']);
+							$role = "&lt;NA&gt;";
+							switch($rawrole){
+							case 'admin':
+								$role = "Administrator";
+								break;
+							case 'competitor':
+								$role = "Competitor";
+								break;
+							case 'spectator':
+								$role = "Spectator";
+								break;
+							}
+							$id = htmlentities($row['user_id']);
 							
 							echo <<<HTML
 <div>
 	<div class="cell">#$id: $name</div>
 	<div class="cell">$email</div>
-	<div class="cell">$role</div>
+	<div class="cell role" onclick="ManageRole($id, '$name')">$role</div>
 </div>
 HTML;
 							$counter += 1;
@@ -99,61 +112,31 @@ HTML;
 			</footer>
 		</div>
 		<div id="dialogs" class="modal">
-			<div class="popup" data-dlg="Login">
+			<div class="popup" data-dlg="ChangeRole">
 				<div class="title">
-					Log In
-					<img src="x.png" onclick="Data.HideDialog('Login')" alt="" class="closer" />
+					Change Role
+					<img src="x.png" class="closer" onclick="Data.HideDialog('ChangeRole')" />
 				</div>
-				<form onsubmit="Data.SignIn(event)">
+				<form onsubmit="changerole(event)">
 					<table>
 						<tbody>
 							<tr>
 								<td>Username:</td>
-								<td><input type="text" name="user" placeholder="Username" /></td>
+								<td id="username-box"></td>
 							</tr>
 							<tr>
-								<td>Password:</td>
-								<td><input type="password" name="pwd" placeholder="Password123" /></td>
-							</tr>
-						</tbody>
-					</table>
-					<button type="submit" class="submit">Log In</button>
-				</form>
-			</div>
-			<div class="popup" data-dlg="Register">
-				<div class="title">
-					Register
-					<img src="x.png" onclick="Data.HideDialog('Register')" alt="" class="closer" />
-				</div>
-				<form onsubmit="Data.SignUp(event)">
-					<table>
-						<tbody>
-							<tr>
-								<td>Username:</td>
-								<td><input type="text" name="user" placeholder="Username" /></td>
-							</tr>
-							<tr>
-								<td>Password:</td>
-								<td><input type="password" name="pwd" placeholder="Password123" /></td>
-							</tr>
-							<tr>
-								<td>Email:</td>
-								<td><input type="email" name="email" placeholder="example@example.org" /></td>
-							</tr>
-							<tr>
+								<td>Role:</td>
 								<td>
-									Why are you signing up?
-								</td>
-								<td>
-									<select name="role">
-										<option value="competitor" selected>To compete as a Student</option>
-										<option value="spectator">To spectate</option>
+									<select id="role-box">
+										<option value="admin">Administrator</option>
+										<option value="competitor">Competitor</option>
+										<option value="spectator">Spectator</option>
 									</select>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<button type="submit" class="submit">Register</button>
+					<button type="submit" class="submit">Change Role</button>
 				</form>
 			</div>
 			<div class="popup" data-dlg="Success">

@@ -98,12 +98,12 @@
 						$counter = 1;
 						
 						do{ //Second effective use of do-while loop!
-							$name = $row['name'];
-							$points = $row['points'];
+							$name = htmlentities($row['name']);
+							$points = htmlentities($row['points']);
 							$asolved = explode(',', $row['solved']);
 							$solved = 0;
 							if( !(count($asolved) == 1 && empty($asolved[0])) ){
-								$solved = count($asolved);
+								$solved = htmlentities(count($asolved));
 							}
 							
 							echo <<<HTML
@@ -128,7 +128,7 @@ HTML;
 					Log In
 					<img src="x.png" onclick="Data.HideDialog('Login')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignIn(event)">
+				<form onsubmit="Data.SignIn(event)" id="login-form">
 					<table>
 						<tbody>
 							<tr>
@@ -149,7 +149,7 @@ HTML;
 					Register
 					<img src="x.png" onclick="Data.HideDialog('Register')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignUp(event)">
+				<form onsubmit="Data.SignUp(event)" id="signup-form">
 					<table>
 						<tbody>
 							<tr>

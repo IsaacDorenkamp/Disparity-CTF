@@ -103,7 +103,7 @@ function join_team(evt){
 		}
 	};
 	
-	var code = document.forms[2].elements['code'].value;
+	var code = document.getElementById('join_team').elements['code'].value;
 	
 	xhr.open( 'POST', 'php-bin/team_api.php' );
 	xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
@@ -137,7 +137,7 @@ function create_team(evt){
 		}
 	};
 	
-	var frm = document.forms[3];
+	var frm = document.getElementById('create_team');
 	var code = frm['code'].value;
 	var name = frm['name'].value;
 	

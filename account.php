@@ -107,63 +107,6 @@
 			</div>
 		</div>
 		<div id="dialogs" class="modal">
-			<div class="popup" data-dlg="Login">
-				<div class="title">
-					Log In
-					<img src="x.png" onclick="Data.HideDialog('Login')" alt="" class="closer" />
-				</div>
-				<form onsubmit="Data.SignIn(event)">
-					<table>
-						<tbody>
-							<tr>
-								<td>Username:</td>
-								<td><input type="text" name="user" /></td>
-							</tr>
-							<tr>
-								<td>Password:</td>
-								<td><input type="password" name="pwd" /></td>
-							</tr>
-						</tbody>
-					</table>
-					<button type="submit" class="submit">Log In</button>
-				</form>
-			</div>
-			<div class="popup" data-dlg="Register">
-				<div class="title">
-					Register
-					<img src="x.png" onclick="Data.HideDialog('Register')" alt="" class="closer" />
-				</div>
-				<form onsubmit="Data.SignUp(event)">
-					<table>
-						<tbody>
-							<tr>
-								<td>Username:</td>
-								<td><input type="text" name="user" placeholder="Username" /></td>
-							</tr>
-							<tr>
-								<td>Password:</td>
-								<td><input type="password" name="pwd" placeholder="Password123" /></td>
-							</tr>
-							<tr>
-								<td>Email:</td>
-								<td><input type="email" name="email" placeholder="example@example.org" /></td>
-							</tr>
-							<tr>
-								<td>
-									Why are you signing up?
-								</td>
-								<td>
-									<select name="role">
-										<option value="competitor" selected>To compete as a Student</option>
-										<option value="spectator">To spectate</option>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<button type="submit" class="submit">Register</button>
-				</form>
-			</div>
 			<div class="popup" data-dlg="Success">
 				<div class="title">
 					Success
@@ -189,7 +132,7 @@
 					<option value="<redacted>" data-attr="password">Password</option>
 					<option value="<?php if( $is_logged ) echo htmlentities(load_user_data( 'email' )); ?>" data-attr="email">E-Mail</option>
 				</select>
-				<form onsubmit="update_user_data_server(event)">
+				<form onsubmit="update_user_data_server(event)" id="acct_data">
 					<table>
 						<tbody>
 							<tr>
@@ -206,7 +149,7 @@
 					Join Team
 					<img src="x.png" class="closer" onclick="Data.HideDialog('JoinTeam')" />
 				</div>
-				<form onsubmit="join_team(event)">
+				<form onsubmit="join_team(event)" id="join_team">
 					<table>
 						<tbody>
 							<tr>
@@ -229,7 +172,7 @@
 					Create Team
 					<img src="x.png" class="closer" onclick="Data.HideDialog('CreateTeam')" />
 				</div>
-				<form onsubmit="create_team(event)">
+				<form onsubmit="create_team(event)" id="create_team">
 					<table>
 						<tbody>
 							<tr>

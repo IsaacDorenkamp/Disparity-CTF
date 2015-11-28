@@ -71,7 +71,7 @@
 		$role = "NULL";
 		if( isset($_POST['role']) ){
 			if( in_array( $_POST['role'], SIGNUP_ROLES ) ){
-				$role = $conn -> real_escape_string($_POST['role']);
+				$role = "'" . $conn -> real_escape_string($_POST['role']) . "'";
 			}
 		}
 		
@@ -86,7 +86,7 @@
 			die('Error: User or email address already exists.');
 		}
 		
-		$insertquery = "INSERT INTO `users` VALUES ('$user', '$pass', '$email', NULL, '$role', '')";
+		$insertquery = "INSERT INTO `users` VALUES ('$user', '$pass', '$email', NULL, $role, '')";
 		$conn -> query( $insertquery );
 		if( $conn -> error ){
 			die( 'A database error occurred.' );
@@ -115,12 +115,12 @@
 				die("Error: Name cannot be empty.");
 			}
 			
-			$checkquery = "SELECT * FROM `users` WHERE name='$name'";
+			$cname = $conn -> real_escape_string( $_SESSION['User'] );
+			$checkquery = "SELECT * FROM `users` WHERE name='$cname'";
 			$res = $conn -> query($checkquery);
 			if( $res && $res -> fetch_assoc() ){
 				die("Error: Username already exists.");
 			}
-			$cname = $_SESSION['User'];
 			$updatequery = "UPDATE `users` SET name='$name' WHERE name='$cname'";
 			$conn -> query($updatequery);
 			if( $conn -> error ){
@@ -143,7 +143,7 @@
 			if( $res && $res -> fetch_assoc() ){
 				die("Error: Email already exists.");
 			}
-			$cname = $_SESSION['User'];
+			$cname = $conn -> real_escape_string( $_SESSION['User'] );
 			$updatequery = "UPDATE `users` SET email='$email' WHERE name='$cname'";
 			$conn -> query($updatequery);
 			if( $conn -> error ){
@@ -162,7 +162,7 @@
 				die("Error: This password is prohibited.");
 			}
 			
-			$cname = $_SESSION['User'];
+			$cname = $conn -> real_escape_string( $_SESSION['User'] );
 			$updatequery = "UPDATE `users` SET password='$pwd' WHERE name='$cname'";
 			$conn -> query($updatequery);
 			if( $conn -> error ){
@@ -185,66 +185,6 @@
 		$target = $conn -> real_escape_string($_POST['target_user']);
 		
 		switch( $type ){
-		case 'name':
-			$name = $conn -> real_escape_string($value);
-			
-			if( empty($name) ){
-				die("Error: Name cannot be empty.");
-			}
-			
-			$checkquery = "SELECT * FROM `users` WHERE name='$name'";
-			$res = $conn -> query($checkquery);
-			if( $res && $res -> fetch_assoc() ){
-				die("Error: Username already exists.");
-			}
-			$updatequery = "UPDATE `users` SET name='$name' WHERE name='$target'";
-			$conn -> query($updatequery);
-			if( $conn -> error ){
-				die("A database error occurred. Could not update data.");
-			}
-			
-			$_SESSION['User'] = $value;
-			
-			echo "OK";
-			break;
-		case 'email':
-			$email = $conn -> real_escape_string($value);
-			
-			if( empty($email) ){
-				die("Error: Email cannot be empty.");
-			}
-			
-			$checkquery = "SELECT * FROM `users` WHERE email='$email'";
-			$res = $conn -> query($checkquery);
-			if( $res && $res -> fetch_assoc() ){
-				die("Error: Email already exists.");
-			}
-			$updatequery = "UPDATE `users` SET email='$email' WHERE name='$target'";
-			$conn -> query($updatequery);
-			if( $conn -> error ){
-				die("A database error occurred. Could not update data.");
-			}
-			
-			echo "OK";
-			break;
-		case 'password':
-			$pwd = $conn -> real_escape_string(password_hash($value, PASSWORD_BCRYPT, ['cost' => 11]));
-			
-			if( empty($pwd) ){
-				die("Error: Password cannot be empty.");
-			}
-			if( $value == "<redacted>" ){
-				die("Error: This password is prohibited.");
-			}
-			
-			$updatequery = "UPDATE `users` SET password='$pwd' WHERE name='$target'";
-			$conn -> query($updatequery);
-			if( $conn -> error ){
-				die("A database error has occurred. Could not update data.");
-			}
-			
-			echo "OK";
-			break;
 		case 'delete':
 			$delquery = "DELETE FROM `users` WHERE name='$target'";
 			$conn -> query( $conn );
@@ -252,6 +192,19 @@
 			if( $conn -> error ){
 				die("A database error has occurred.");
 			}
+			break;
+		case 'role':
+			$evalue = $conn -> real_escape_string($value);
+			if( !($value == "admin" || $value == "competitor" || $value == "spectator") ){
+				$esc = htmlentities($value);
+				die("Invalid role '$esc'!");
+			}
+			$uquery = "UPDATE `users` SET role='$evalue' WHERE name='$target'";
+			$conn -> query($uquery);
+			if( $conn -> error ){
+				die("A database error has occurred.");
+			}
+			echo "OK";
 			break;
 		}
 		break;

@@ -145,6 +145,9 @@ form > table > tbody > tr > td:nth-child(even){
 	text-align: left;
 	width: 60%;
 }
+form > table > tbody > tr:last-child{
+	margin-bottom: 50px;
+}
 td{
 	border: none;
 	padding: 0;
@@ -167,9 +170,21 @@ div.cell, div.theader{
 	
 	overflow-x: auto;
 }
+div.role{
+	cursor: pointer;
+	
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	-ms-user-select: none;
+}
 div.theader{
 	font-weight: bold;
 	font-size: 20pt;
+}
+div#tbody > div > div.cell:first-child{
+	text-align: left;
 }
 button.submit{
 	position: absolute;
@@ -267,7 +282,7 @@ button:hover, button:focus{
 	border-color: #AAA;
 	box-shadow: 0 0 7px #AAA;
 }
-input[type="text"], input[type="password"], input[type="email"]{
+input[type="text"], input[type="password"], input[type="email"], select{
 	border-radius: 5px;
 	padding: 10px;
 	box-sizing: border-box;
@@ -277,10 +292,7 @@ input[type="text"], input[type="password"], input[type="email"]{
 	border-color: #CCC;
 	outline: none;
 }
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus{
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus{
 	box-shadow: 0 0 15px lightblue;
 	border-color: lightblue;
-}
-form > table > tbody > tr:last-child{
-	margin-bottom: 50px;
 }
