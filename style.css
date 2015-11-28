@@ -139,11 +139,11 @@ form > table > tbody > tr > td:nth-child(even){
 }
 form > table > tbody > tr > td:nth-child(odd){
 	text-align: right;
-	width: 45%;
+	width: 33%;
 }
 form > table > tbody > tr > td:nth-child(even){
 	text-align: left;
-	width: 45%;
+	width: 60%;
 }
 td{
 	border: none;
@@ -260,6 +260,8 @@ button{
 	transition: all .25s linear;
 	
 	outline: none;
+	
+	min-width: 75px;
 }
 button:hover, button:focus{
 	border-color: #AAA;

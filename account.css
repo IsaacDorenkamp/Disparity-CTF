@@ -76,3 +76,21 @@ hr{
 	height: 0;
 	border: 1px dashed gray;
 }
+
+form{
+	margin: 0 !important;
+}
+
+table.account-details{
+	display: block;
+	max-width: 350px;
+	margin: 0 auto;
+}
+
+h2{
+	text-align: center;
+	margin-bottom: 20px;
+}
+h2.danger{
+	text-decoration: underline;
+}

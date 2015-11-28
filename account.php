@@ -71,7 +71,7 @@
 		</div>
 		<div id="main">
 			<div id="acct-details">
-				<table>
+				<table class="account-details">
 					<tbody>
 						<tr>
 							<td>Account Username:</td>
@@ -99,7 +99,7 @@
 					?>
 				</h2>
 				<div id="danger_zone">
-					<h2>Danger Zone</h2>
+					<h2 class="danger">Danger Zone</h2>
 					<button onclick="Confirm.show(leave_team)" class="ui">Leave Team</button>
 					<br />
 					<button onclick="Confirm.show(delete_account)" class="ui">Delete Account</button>
@@ -189,11 +189,17 @@
 					<option value="<redacted>" data-attr="password">Password</option>
 					<option value="<?php if( $is_logged ) echo htmlentities(load_user_data( 'email' )); ?>" data-attr="email">E-Mail</option>
 				</select>
-				<div>
-					Value: <input id="data_target" type="text" value="<?php if( $is_logged ) echo htmlentities($_SESSION['User']); ?>" onchange="update_app_data()" />
-				</div>
-				
-				<button onclick="update_user_data_server()" class="submit">Update</button>
+				<form onsubmit="update_user_data_server(event)">
+					<table>
+						<tbody>
+							<tr>
+								<td>Value:</td>
+								<td><input id="data_target" type="text" value="<?php if( $is_logged ) echo htmlentities($_SESSION['User']); ?>" onchange="update_app_data()" /></td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="submit" class="submit">Update</button>
+				</form>
 			</div>
 			<div class="popup" data-dlg="JoinTeam">
 				<div class="title">

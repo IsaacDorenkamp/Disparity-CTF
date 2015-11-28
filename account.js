@@ -20,17 +20,17 @@ function update_user_data(){
 		var val = select.value;
 		data_target.value = val;
 		data_type = select.options[select.selectedIndex].getAttribute('data-attr');
+		if( data_type == "password" ){
+			data_target.type = "password";
+		}else if( data_type == "email" ){
+			data_target.type = "email";
+		}else{
+			data_target.type = "text"
+		}
 	}
 }
 
 function update_app_data(){
-	if( data_type == "password" ){
-		data_target.type = "password";
-	}else if( data_type == "email" ){
-		data_target.type = "email";
-	}else{
-		data_target.type = "text"
-	}
 	UData[data_type] = data_target.value;
 }
 
@@ -42,7 +42,14 @@ function getXHR(){
 	}
 }
 
-function update_user_data_server(){
+function update_user_data_server(evt){
+	if( evt.preventDefault ){
+		evt.preventDefault();
+	}else if( evt.stopPropagation ){
+		evt.stopPropagation();
+	}else{
+		evt.cancelBubble = true;
+	}
 	update_app_data();
 	var xhr = getXHR();
 	
