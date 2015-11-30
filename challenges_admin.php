@@ -1,44 +1,29 @@
 <?php
+	require('php-bin/challenge_api.php');
+
 	session_start();
+	$is_logged = isset($_SESSION['User']);
 	
-	require('php-bin/db.inc.php');
-	
-	$logged_in = isset($_SESSION['User']);
-	
-	if( !$logged_in ){
+	if( !$is_logged ){
 		header('Location: index.php');
 		exit();
 	}
 	
-	function load_user_data( $type ){
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
-		$user = $conn -> real_escape_string( $_SESSION['User'] );
-		$query = "SELECT * FROM `users` WHERE name='$user'";
-		$res = $conn -> query($query);
-		if( !$res ){
-			return '';
-		}
-		
-		$data = $res -> fetch_assoc();
-		if( !$data ){
-			return '';
-		}
-		
-		if( isset( $data[$type] ) ){
-			return $data[$type];
-		}
-		
-		return '';
+	$role = load_user_data('role');
+	if( $role != "admin" ){
+		header('Location: index.php');
+		exit();
 	}
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF -- Scoreboard</title>
+		<title>Disparity CTF -- Challenges</title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="challenge.css" />
 		<script src="home.js"></script>
-		<script src="scoreboard.js"></script>
+		<script src="challenges_admin.js"></script>
 	</head>
 	<body>
 		<div id="head">
@@ -47,7 +32,7 @@
 			</span>
 			<ul id="nav">
 				<?php
-					if( !$logged_in ){
+					if( !$is_logged ){
 				?>
 					<li onclick="Data.ShowDialog('Register')"><span class="text">Register</span></li>
 					<li onclick="Data.ShowDialog('Login')"><span class="text">Log In</span></li>
@@ -62,81 +47,65 @@
 						}
 					?>
 					<li onclick="location.assign('account.php')"><span class="text">Account</span></li>
-					<li onclick="location.assign('challenges.php')"><span class="text">Challenges</span></li>
 					<li onclick="location.assign('index.php')"><span class="text">Home</span></li>
+					<li onclick="location.assign('scoreboard.php')"><span class="text">Scoreboard</span></li>
 					<li onclick="Data.SignOut()"><span class="text">Log Out</span></li>
 				<?php
 					}
 				?>
 			</ul>
 		</div>
-		<div id="main">
-			<div class="table">
-				<div>
-					<div class="theader">Team Name</div>
-					<div class="theader">Points</div>
-					<div class="theader">Solved</div>
-				</div>
-				<hr />
-				<div id="tbody">
-					<?php
-						$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
-						
-						$tquery = "SELECT * FROM `teams` ORDER BY points LIMIT 50";
-						$res = $conn -> query( $tquery );
-						
-						if( !$res ){
-							die('Could not fetch score data.');
-						}
-						
-						$row = $res -> fetch_assoc();
-						if( !$row ){
-							die('No teams registered yet!');
-						}
-						
-						$counter = 1;
-						
-						do{ //Second effective use of do-while loop!
-							$name = htmlentities($row['name']);
-							$points = htmlentities($row['points']);
-							$asolved = explode(',', $row['solved']);
-							$solved = 0;
-							if( !(count($asolved) == 1 && empty($asolved[0])) ){
-								$solved = htmlentities(count($asolved));
-							}
-							
+		<div id="challenges">
+			<?php
+				if( load_user_data('team') ){
+					$all = load_challenges();
+					$lst = [];
+					foreach( $all as $chal ){
+						$lst[] = load_full_challenge( $chal );
+					}
+					$dsp = [];
+					foreach( $lst as $item ){
+						$cat = $item['category'];
+						$dsp[$cat][] = ["points" => $item['points'], "id" => $item['challenge_id']];
+					}
+					
+					foreach( $dsp as $cname => $category ){
+						echo "<div class=\"row\">";
+						echo "<div class=\"cname\">" . htmlentities($cname) . "</div>";
+						foreach( $category as $questiondata ){
+							$question = htmlentities($questiondata['points']);
+							$id = htmlentities($questiondata['id']);
+							$cat = htmlentities($cname);
 							echo <<<HTML
-<div>
-	<div class="cell">$counter. $name</div>
-	<div class="cell">$points</div>
-	<div class="cell">$solved</div>
+<div class="question solved" onclick="load_question($id)" data-resend="$question;$cat" id="question{$id}">
+	$question
 </div>
 HTML;
-							$counter += 1;
-						}while( ($row = $res -> fetch_assoc()) );
-					?>
-				</div>
-			</div>
+						}
+						echo "</div>";
+					}
+				}else{
+					echo "<h1>You must be on a team to compete!</h1>";
+				}
+			?>
+			<button onclick="create_question()" id="create">+</button>
 		</div>
-		<footer>
-			Designed 2015 by IS44CQU4RK of M350N Studios.
-		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">
 				<div class="title">
 					Log In
 					<img src="x.png" onclick="Data.HideDialog('Login')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignIn(event)" id="login-form">
+				<form onsubmit="Data.SignIn(event)">
 					<table>
 						<tbody>
 							<tr>
 								<td>Username:</td>
-								<td><input type="text" name="user" placeholder="Username" /></td>
+								<td><input type="text" name="user" /></td>
 							</tr>
 							<tr>
 								<td>Password:</td>
-								<td><input type="password" name="pwd" placeholder="Password123" /></td>
+								<td><input type="password" name="pwd" /></td>
 							</tr>
 						</tbody>
 					</table>
@@ -148,7 +117,7 @@ HTML;
 					Register
 					<img src="x.png" onclick="Data.HideDialog('Register')" alt="" class="closer" />
 				</div>
-				<form onsubmit="Data.SignUp(event)" id="signup-form">
+				<form onsubmit="Data.SignUp(event)">
 					<table>
 						<tbody>
 							<tr>
@@ -192,6 +161,19 @@ HTML;
 				</div>
 				<span id="failure-msg">Operation failed.</span>
 				<button onclick="location.reload()" class="submit">OK</button>
+			</div>
+			<div class="popup lower" data-dlg="Question">
+				<div class="title">
+					Question
+					<img src="x.png" alt="" class="closer" onclick="Data.HideDialog('Question')" />
+				</div>
+				<form onsubmit="set_question(event)">
+					<input type="text" name="category" placeholder="Category" />
+					<input type="text" name="points" placeholder="Points" />
+					<textarea rows="5" name="question" placeholder="Question"></textarea>
+					<input type="text" placeholder="Answer" name="answer" />
+					<button type="submit" class="submit">Submit</button>
+				</form>
 			</div>
 		</div>
 	</body>

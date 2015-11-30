@@ -10,7 +10,7 @@
 		if( !isset($_SESSION['User']) ){
 			return '';
 		}
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 		$user = $conn -> real_escape_string( $_SESSION['User'] );
 		$query = "SELECT * FROM `users` WHERE name='$user'";
 		$res = $conn -> query($query);
@@ -31,7 +31,7 @@
 	}
 	
 	function create_team($name, $code){
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 		
 		if( isset($_SESSION['User']) ){
 			$team = load_user_data('team');
@@ -75,7 +75,7 @@
 		if( !isset( $_SESSION['User'] ) ){
 			return 'You must be logged in to join a team.';
 		}
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 		
 		$ecode = $conn -> real_escape_string($code);
 		$tquery = "SELECT * FROM `teams` WHERE teamcode='$ecode'";
@@ -146,7 +146,7 @@
 		if( !load_user_data('team') ){
 			die("You are not on a team.");
 		}
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 		$user = $_SESSION['User'];
 		$euser = $conn -> real_escape_string($user);
 		$query = "UPDATE `users` SET team=NULL WHERE name='$euser'";

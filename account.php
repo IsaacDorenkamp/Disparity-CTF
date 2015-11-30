@@ -106,6 +106,9 @@
 				</div>
 			</div>
 		</div>
+		<footer>
+			Designed 2015 by IS44CQU4RK of M350N Studios.
+		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Success">
 				<div class="title">
@@ -126,15 +129,19 @@
 					Account Data
 					<img src="x.png" class="closer" onclick="Data.HideDialog('AccountData')" />
 				</div>
-				Attribute: 
-				<select id="account_attribute" onchange="update_user_data()">
-					<option value="<?php if( $is_logged ) echo htmlentities($_SESSION['User']); ?>" data-attr="name">Username</option>
-					<option value="<redacted>" data-attr="password">Password</option>
-					<option value="<?php if( $is_logged ) echo htmlentities(load_user_data( 'email' )); ?>" data-attr="email">E-Mail</option>
-				</select>
 				<form onsubmit="update_user_data_server(event)" id="acct_data">
 					<table>
 						<tbody>
+							<tr>
+								<td>Attribute:</td>
+								<td>
+									<select id="account_attribute" onchange="update_user_data()">
+										<option value="<?php if( $is_logged ) echo htmlentities($_SESSION['User']); ?>" data-attr="name">Username</option>
+										<option value="<redacted>" data-attr="password">Password</option>
+										<option value="<?php if( $is_logged ) echo htmlentities(load_user_data( 'email' )); ?>" data-attr="email">E-Mail</option>
+									</select>
+								</td>
+							</tr>
 							<tr>
 								<td>Value:</td>
 								<td><input id="data_target" type="text" value="<?php if( $is_logged ) echo htmlentities($_SESSION['User']); ?>" onchange="update_app_data()" /></td>
@@ -195,7 +202,7 @@
 				<div class="message">
 					Are you SURE you want to do this?
 				</div>
-				<button onclick="Confirm.callback()" class="yes">Yes</button>
+				<button onclick="Confirm.callback()" class="yes" id="submit-button">Yes</button>
 				<button onclick="Data.HideDialog('Confirm')" class="no">No</button>
 			</div>
 		</div>

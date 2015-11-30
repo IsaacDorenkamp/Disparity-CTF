@@ -3,8 +3,6 @@
 	
 	error_reporting(0);
 	@ini_set('display_errors', 0);
-	
-	define( 'SIGNUP_ROLES', ['spectator', 'competitor'] );
 
 	require('db.inc.php');
 	
@@ -14,14 +12,14 @@
 	
 	$action = $_POST['action'];
 	
-	$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+	$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 	
 	if( $conn -> error ){
 		die("Error: Could not connect to database.");
 	}
 	
 	function load_user_data( $type ){
-		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+		$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 		$user = $conn -> real_escape_string( $_SESSION['User'] );
 		$query = "SELECT * FROM `users` WHERE name='$user'";
 		$res = $conn -> query($query);
@@ -68,10 +66,11 @@
 			die('Error: Insufficient data provided for login.');
 		}
 		
-		$role = "NULL";
+		$role = "spectator";
 		if( isset($_POST['role']) ){
-			if( in_array( $_POST['role'], SIGNUP_ROLES ) ){
-				$role = "'" . $conn -> real_escape_string($_POST['role']) . "'";
+			$pr = $_POST['role'];
+			if( $pr == "competitor" || $pr == "spectator" ){
+				$role = $conn -> real_escape_string($_POST['role']);
 			}
 		}
 		
@@ -86,7 +85,7 @@
 			die('Error: User or email address already exists.');
 		}
 		
-		$insertquery = "INSERT INTO `users` VALUES ('$user', '$pass', '$email', NULL, $role, '')";
+		$insertquery = "INSERT INTO `users` VALUES ('$user', '$pass', '$email', NULL, '$role', '')";
 		$conn -> query( $insertquery );
 		if( $conn -> error ){
 			die( 'A database error occurred.' );

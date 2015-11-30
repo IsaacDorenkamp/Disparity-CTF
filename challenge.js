@@ -15,6 +15,8 @@ var QData = {
 		Data.ShowDialog('Question');
 	},
 	
+	SubmitButton: null,
+	
 	ID: -1
 };
 
@@ -51,6 +53,7 @@ function verify_question(evt){
 	var xhr = getXHR();
 	
 	xhr.onreadystatechange = function(){
+		if( xhr.readyState == 4 ) QData.SubmitButton.disabled = false;
 		if( xhr.readyState == 4 && xhr.status == 200 ){
 			if(xhr.responseText == 'OK'){
 				Data.SetSuccessMessage('Correct Answer!');
@@ -70,11 +73,13 @@ function verify_question(evt){
 	xhr.open( 'POST', 'php-bin/challenge_api.php' );
 	xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
 	var ans = document.forms[2].elements['answer'].value;
+	QData.SubmitButton.disabled = true;
 	xhr.send( 'action=verify&id=' + encodeURIComponent(QData.ID) + '&answer=' + encodeURIComponent(ans) );
 }
 
 function InitChallenges(){
 	QData.QBox = document.getElementById('question-box');
+	QData.SubmitButton = document.getElementById('submit-button');
 }
 
 addEventListener('load', InitChallenges);

@@ -34,6 +34,7 @@
 <html>
 	<head>
 		<title>Disparity CTF -- Scoreboard</title>
+		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
 		<script src="home.js"></script>
 		<script src="dashboard.js"></script>
@@ -52,65 +53,77 @@
 			</ul>
 		</div>
 		<div id="main">
-			<div class="table">
-				<div>
-					<div class="theader">Username</div>
-					<div class="theader">Email</div>
-					<div class="theader">Role</div>
-				</div>
+			<div class="zone">
+				<h2>Challenges</h2>
 				<hr />
-				<div id="tbody">
-					<?php
-						$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
-						
-						$tquery = "SELECT * FROM `users`";
-						$res = $conn -> query( $tquery );
-						
-						if( !$res ){
-							die('Could not fetch user data.');
-						}
-						
-						$row = $res -> fetch_assoc();
-						if( !$row ){
-							die('No users registered yet!');
-						}
-						
-						$counter = 1;
-						
-						do{ //Second effective use of do-while loop!
-							$name = htmlentities($row['name']);
-							$email = htmlentities($row['email']);
-							$rawrole = htmlentities($row['role']);
-							$role = "&lt;NA&gt;";
-							switch($rawrole){
-							case 'admin':
-								$role = "Administrator";
-								break;
-							case 'competitor':
-								$role = "Competitor";
-								break;
-							case 'spectator':
-								$role = "Spectator";
-								break;
-							}
-							$id = htmlentities($row['user_id']);
+				<ul>
+					<li><a href="challenges_admin.php">Edit Challenges</a></li>
+					<li><a href="challenges.php">View Challenges</a></li>
+				</ul>
+			</div>
+			<div class="zone">
+				<h2>Users</h2>
+				<hr />
+				<div class="table">
+					<div>
+						<div class="theader">Username</div>
+						<div class="theader">Email</div>
+						<div class="theader">Role</div>
+					</div>
+					<hr />
+					<div id="tbody">
+						<?php
+							$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
 							
-							echo <<<HTML
+							$tquery = "SELECT * FROM `users`";
+							$res = $conn -> query( $tquery );
+							
+							if( !$res ){
+								die('Could not fetch user data.');
+							}
+							
+							$row = $res -> fetch_assoc();
+							if( !$row ){
+								die('No users registered yet!');
+							}
+							
+							$counter = 1;
+							
+							do{ //Second effective use of do-while loop!
+								$name = htmlentities($row['name']);
+								$email = htmlentities($row['email']);
+								$rawrole = htmlentities($row['role']);
+								$role = "&lt;NA&gt;";
+								switch($rawrole){
+								case 'admin':
+									$role = "Administrator";
+									break;
+								case 'competitor':
+									$role = "Competitor";
+									break;
+								case 'spectator':
+									$role = "Spectator";
+									break;
+								}
+								$id = htmlentities($row['user_id']);
+								
+								echo <<<HTML
 <div>
 	<div class="cell">#$id: $name</div>
 	<div class="cell">$email</div>
 	<div class="cell role" onclick="ManageRole($id, '$name')">$role</div>
 </div>
 HTML;
-							$counter += 1;
-						}while( ($row = $res -> fetch_assoc()) );
-					?>
-				</div>
+								$counter += 1;
+							}while( ($row = $res -> fetch_assoc()) );
+						?>
+					</div>
 			</div>
-			<footer>
-				Designed 2015 by IS44CQU4RK of M350N Studios.
-			</footer>
+			</div>
 		</div>
+		<footer>
+			Designed 2015 by IS44CQU4RK of M350N Studios.
+		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="ChangeRole">
 				<div class="title">

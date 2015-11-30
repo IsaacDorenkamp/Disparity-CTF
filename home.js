@@ -32,11 +32,20 @@ function Modal(id){
 		if( closed ) self.element.style.visibility = "hidden";
 	};
 	this.Configure = function(dlg){
-		dlg.style.top = "35%";
+		if( dlg.className.split(" ").indexOf("lower") != -1 ){
+			console.log('lower');
+			dlg.style.top = "40%";
+		}else{
+			dlg.style.top = "35%";
+		}
 		dlg.style.opacity = "1";
 	};
 	this.Deconfigure = function(dlg){
-		dlg.style.top = "30%";
+		if( dlg.className.split(" ").indexOf("lower") != -1 ){
+			dlg.style.top = "35%";
+		}else{
+			dlg.style.top = "30%";
+		}
 		dlg.style.opacity = "0";
 	}
 }
@@ -160,10 +169,11 @@ var Data = {
 		var user = form.elements['user'].value;
 		var pass = form.elements['pwd'].value;
 		var email = form.elements['email'].value;
+		var role = form.elements['role'].value;
 		
 		xhr.open( 'POST', 'php-bin/useraction.php' );
 		xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
-		xhr.send( 'action=signup&user=' + encodeURIComponent(user) + '&pwd=' + encodeURIComponent(pass) + '&email=' + encodeURIComponent(email) )
+		xhr.send( 'action=signup&role=' + encodeURIComponent(role) + '&user=' + encodeURIComponent(user) + '&pwd=' + encodeURIComponent(pass) + '&email=' + encodeURIComponent(email) )
 	}
 }
 

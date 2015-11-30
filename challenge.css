@@ -19,7 +19,8 @@ div.question{
 	
 	transition: box-shadow .25s ease-in-out;
 	
-	min-width: 100px;
+	width: 100px;
+	overflow-x: hidden;
 	text-align: center;
 }
 div.question:not(.solved):hover{

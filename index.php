@@ -82,10 +82,10 @@
 				?>
 			</div>
 			<div id="disp-msg"></div>
-			<footer>
-				Designed 2015 by IS44CQU4RK of M350N Studios.
-			</footer>
 		</div>
+		<footer>
+			Designed 2015 by IS44CQU4RK of M350N Studios.
+		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">
 				<div class="title">

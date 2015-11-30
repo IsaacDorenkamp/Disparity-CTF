@@ -4,7 +4,11 @@ var data_type="name";
 
 var UData = {
 	name: '',
-	password: ''
+	password: '',
+	
+	LeftTeam: false,
+	CreatedTeam: false,
+	DeletedAccount: false
 }
 
 var Confirm = {
@@ -110,6 +114,7 @@ function join_team(evt){
 	xhr.send( 'action=join&code=' + encodeURIComponent(code) );
 }
 function create_team(evt){
+	if( UData.CreatedTeam ) return;
 	if( evt.preventDefault ){
 		evt.preventDefault();
 	}else if( evt.stopPropagation ){
@@ -126,11 +131,13 @@ function create_team(evt){
 				Data.SetSuccessMessage("Joined team!");
 				Data.ShowDialog('Success');
 			}else{
+				UData.CreatedTeam = false;
 				Data.SetFailureMessage(xhr.responseText);
 				Data.ShowDialog('Failure');
 			}
 		}else{
 			if( xhr.readyState == 4 && xhr.status != 200 ){
+				UData.CreateTeam = false;
 				Data.SetFailureMessage("Server error occurred! Could not update data.");
 				Data.ShowDialog('Failure');
 			}
@@ -144,8 +151,10 @@ function create_team(evt){
 	xhr.open( 'POST', 'php-bin/team_api.php' );
 	xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
 	xhr.send( 'action=create&code=' + encodeURIComponent(code) + '&name=' + encodeURIComponent(name) );
+	UData.CreatedTeam = true;
 }
 function leave_team(){
+	if( UData.LeftTeam ) return;
 	var xhr = getXHR();
 	
 	xhr.onreadystatechange = function(){
@@ -154,11 +163,13 @@ function leave_team(){
 				Data.SetSuccessMessage("Left team.");
 				Data.ShowDialog('Success');
 			}else{
+				UData.LeftTeam = false;
 				Data.SetFailureMessage(xhr.responseText);
 				Data.ShowDialog('Failure');
 			}
 		}else{
 			if( xhr.readyState == 4 && xhr.status != 200 ){
+				UData.LeftTeam = false;
 				Data.SetFailureMessage("Server error occurred! Could not leave team.");
 				Data.ShowDialog('Failure');
 			}
@@ -168,8 +179,10 @@ function leave_team(){
 	xhr.open( 'POST', 'php-bin/team_api.php' );
 	xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
 	xhr.send( 'action=leave' );
+	UData.LeftTeam = true;
 }
 function delete_account(){
+	if( UData.DeletedAccount ) return;
 	var xhr = getXHR();
 	
 	xhr.onreadystatechange = function(){
@@ -178,11 +191,13 @@ function delete_account(){
 				Data.SetSuccessMessage("Deleted account.");
 				Data.ShowDialog('Success');
 			}else{
+				UData.DeletedAccount = false;
 				Data.SetFailureMessage(xhr.responseText);
 				Data.ShowDialog('Failure');
 			}
 		}else{
 			if( xhr.readyState == 4 && xhr.status != 200 ){
+				UData.DeletedAccount = false;
 				Data.SetFailureMessage("Server error occurred! Could not leave team.");
 				Data.ShowDialog('Failure');
 			}
@@ -192,11 +207,14 @@ function delete_account(){
 	xhr.open( 'POST', 'php-bin/useraction.php' );
 	xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
 	xhr.send( 'action=delete' );
+	UData.DeletedAccount = true;
 }
 
 function InitAcct(){
 	select = document.getElementById('account_attribute');
 	data_target = document.getElementById('data_target');
+	
+	UData.YesButton = document.getElementById('submit-button');
 }
 
 addEventListener( 'load', InitAcct );

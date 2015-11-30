@@ -55,7 +55,7 @@
 				?>
 			</ul>
 		</div>
-		<div id="challenges">
+		<div id="main" class="challenges">
 			<?php
 				if( load_user_data('team') ){
 					$all = load_challenges();
@@ -71,7 +71,7 @@
 					
 					foreach( $dsp as $cname => $category ){
 						echo "<div class=\"row\">";
-						echo $cname;
+						echo "<div class=\"cname\">" . htmlentities($cname) . "</div>";
 						foreach( $category as $questiondata ){
 							$question = htmlentities($questiondata['points']);
 							$id = htmlentities($questiondata['id']);
@@ -92,6 +92,9 @@ HTML;
 				}
 			?>
 		</div>
+		<footer>
+			Designed 2015 by IS44CQU4RK of M350N Studios.
+		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">
 				<div class="title">
@@ -172,7 +175,7 @@ HTML;
 				<div id="question-box"></div>
 				<form onsubmit="verify_question(event)">
 					<input type="text" placeholder="Answer" name="answer" />
-					<button type="submit" class="submit">Submit</button>
+					<button type="submit" class="submit" id="submit-button">Submit</button>
 				</form>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 <?php
 	require('db.inc.php');
 	
-	$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
+	$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, DB_NAME );
 	
 	$tquery = "SELECT * FROM `teams` ORDER BY points LIMIT 50";
 	$res = $conn -> query( $tquery );
