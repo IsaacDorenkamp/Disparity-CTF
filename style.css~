@@ -38,25 +38,18 @@ span.title{
 	font-size: 48pt;
 	display: inline-block;
 	
-	width: 35px;
-	overflow-x: auto;
-	
-	position: absolute;
+	/*position: absolute;
 	top: 50%;
 	transform: translateY( -50% );
-	-webkit-transform: translateY( -50% );
+	-webkit-transform: translateY( -50% );*/
 }
 
 ul#nav{
-	float: right;
 	margin: 0;
 	margin-left: 15px;
 	padding: 0;
 	height: 100%;
 	display: inline-block;
-	
-	width: 60%;
-	overflow-x: auto;
 }
 li{
 	list-style-type: none;
