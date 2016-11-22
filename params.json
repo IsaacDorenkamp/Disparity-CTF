@@ -1,0 +1,6 @@
+{
+  "name": "Disparity",
+  "tagline": "",
+  "body": "### DISPARITY\r\n\r\nDISPARITY is a capture the flag framework built for computer security competitions.\r\n\r\nFeatures:\r\n* Slick, smooth user interface\r\n* Secure MySQL database system for keeping track of teams",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
