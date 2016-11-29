@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	require('php-bin/db.inc.php');
+	require('php-bin/global.php');
 	$is_logged = isset( $_SESSION['User'] );
 	
 	if( !$is_logged ){
@@ -32,7 +33,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF -- Account</title>
+		<title><?php echo htmlentities(CTF_NAME); ?> -- Account</title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
 		<link rel="stylesheet" href="account.css" />
@@ -42,7 +43,7 @@
 	<body>
 		<div id="head">
 			<span class="title">
-				Disparity CTF
+				<?php echo htmlentities(CTF_NAME); ?>
 			</span>
 			<ul id="nav">
 				<?php

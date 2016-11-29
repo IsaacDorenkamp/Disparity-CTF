@@ -8,6 +8,44 @@ var DashboardData = {
 			Username: null,
 			Box: null,
 			Selected: "admin"
+		},
+		CreateTeam: {
+			create: function(evt){
+				if( evt.preventDefault ){
+					evt.preventDefault();
+				}else if( evt.stopPropagation ){
+					evt.stopPropagation();
+				}else{
+					evt.cancelBubble = true;
+				};
+				
+				var xhr = getXHR();
+				
+				xhr.onreadystatechange = function(){
+					if( xhr.readyState == 4 && xhr.status == 200 ){
+						if( xhr.responseText == 'OK' ){
+							Data.SetSuccessMessage("Created team!");
+							Data.ShowDialog('Success');
+						}else{
+							Data.SetFailureMessage(xhr.responseText);
+							Data.ShowDialog('Failure');
+						}
+					}else{
+						if( xhr.readyState == 4 && xhr.status != 200 ){
+							Data.SetFailureMessage("Server error occurred! Could not update data.");
+							Data.ShowDialog('Failure');
+						}
+					}
+				};
+				
+				var frm = document.getElementById('create_team');
+				var code = frm['code'].value;
+				var name = frm['name'].value;
+				
+				xhr.open( 'POST', 'php-bin/team_api.php' );
+				xhr.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+				xhr.send( 'action=create&code=' + encodeURIComponent(code) + '&name=' + encodeURIComponent(name) );
+			}
 		}
 	}
 };

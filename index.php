@@ -2,6 +2,7 @@
 	session_start();
 	
 	require('php-bin/db.inc.php');
+	require('php-bin/global.php');
 	$logged_in = isset( $_SESSION['User'] );
 	
 	function load_user_data( $type ){
@@ -28,7 +29,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF</title>
+		<title><?php echo htmlentities(CTF_NAME); ?></title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
 		<script src="home.js"></script>
@@ -37,7 +38,7 @@
 	<body>
 		<div id="head">
 			<span class="title">
-				Disparity CTF
+				<?php echo htmlentities(CTF_NAME); ?>
 			</span>
 			<ul id="nav">
 				<?php
@@ -77,14 +78,14 @@
 					if( $logged_in ){
 						echo 'Welcome, ' . htmlentities($_SESSION['User']) . '.';
 					}else{
-						echo 'Please sign in to participate in Disparity.';
+						echo 'Please sign in to participate in ' . htmlentities(CTF_NAME) . '.';
 					}
 				?>
 			</div>
 			<div id="disp-msg"></div>
 		</div>
 		<footer>
-			Designed 2015 by IS44CQU4RK of M350N Studios.
+			<?php echo FOOTER; ?>
 		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">

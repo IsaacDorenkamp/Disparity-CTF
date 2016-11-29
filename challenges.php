@@ -1,5 +1,6 @@
 <?php
 	require('php-bin/challenge_api.php');
+	require('php-bin/global.php');
 
 	session_start();
 	$is_logged = isset($_SESSION['User']);
@@ -18,7 +19,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF -- Challenges</title>
+		<title><?php echo htmlentities(CTF_NAME); ?> -- Challenges</title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
 		<link rel="stylesheet" href="challenge.css" />
@@ -28,7 +29,7 @@
 	<body>
 		<div id="head">
 			<span class="title">
-				Disparity CTF
+				<?php echo htmlentities(CTF_NAME); ?>
 			</span>
 			<ul id="nav">
 				<?php
@@ -95,7 +96,7 @@ HTML;
 			?>
 		</div>
 		<footer>
-			Designed 2015 by IS44CQU4RK of M350N Studios.
+			<?php echo FOOTER; ?>
 		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">

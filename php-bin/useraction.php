@@ -66,11 +66,13 @@
 			die('Error: Insufficient data provided for login.');
 		}
 		
-		$role = "spectator";
+		$role = "competitor";
 		if( isset($_POST['role']) ){
 			$pr = $_POST['role'];
 			if( $pr == "competitor" || $pr == "spectator" ){
 				$role = $conn -> real_escape_string($_POST['role']);
+			}else{
+				die('Error: Invalid role!');
 			}
 		}
 		
@@ -81,7 +83,7 @@
 		$checkquery = "SELECT * FROM `users` WHERE name='$user' OR email='$email'";
 		$checkres = $conn -> query($checkquery);
 		
-		if( $checkres && $checkres -> fetch_assoc() ){
+		if( $checkres -> num_rows >= 1 ){ //should only equal one, but in cases of manual override, we need to allow for more than one result as well
 			die('Error: User or email address already exists.');
 		}
 		
@@ -117,7 +119,7 @@
 			$cname = $conn -> real_escape_string( $_SESSION['User'] );
 			$checkquery = "SELECT * FROM `users` WHERE name='$cname'";
 			$res = $conn -> query($checkquery);
-			if( $res && $res -> fetch_assoc() ){
+			if( $res -> num_rows >= 1 ){
 				die("Error: Username already exists.");
 			}
 			$updatequery = "UPDATE `users` SET name='$name' WHERE name='$cname'";
@@ -139,7 +141,7 @@
 			
 			$checkquery = "SELECT * FROM `users` WHERE email='$email'";
 			$res = $conn -> query($checkquery);
-			if( $res && $res -> fetch_assoc() ){
+			if( $res -> num_rows >= 1 ){
 				die("Error: Email already exists.");
 			}
 			$cname = $conn -> real_escape_string( $_SESSION['User'] );
@@ -156,9 +158,6 @@
 			
 			if( empty($pwd) ){
 				die("Error: Password cannot be empty.");
-			}
-			if( $value == "<redacted>" ){
-				die("Error: This password is prohibited.");
 			}
 			
 			$cname = $conn -> real_escape_string( $_SESSION['User'] );

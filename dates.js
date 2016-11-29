@@ -1,4 +1,9 @@
-var dat = Date.parse( 'December 21, 2015 12:00:00' );
+var GLOBAL = {
+	CTF_NAME: 'ByteCTF',
+	CTF_DATE: 'February 18, 2017 9:00:00'
+};
+
+var dat = Date.parse( GLOBAL.CTF_DATE );
 
 var showing_dsp_msg = false;
 
@@ -19,7 +24,7 @@ function compare_dates(){
 			if( hours == 0 ){
 				if( days == 0 ){
 					if( !showing_dsp_msg ){
-						db.innerHTML = 'DISPARITY HAS BEGUN.';
+						db.innerHTML = GLOBAL.CTF_NAME + ' HAS BEGUN.';
 						db.style.top = '0';
 						db.style.opacity = '1';
 						db.style.visibility = 'visible';

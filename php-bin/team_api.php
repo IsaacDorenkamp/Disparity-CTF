@@ -35,7 +35,8 @@
 		
 		if( isset($_SESSION['User']) ){
 			$team = load_user_data('team');
-			if( !empty($team) ){
+			$role = load_user_data('role');
+			if( !empty($team) && $role != "admin" ){
 				return 'You are already on a team! You can only create a team if you are not currently on one.';
 			}
 		}else{

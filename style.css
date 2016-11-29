@@ -38,7 +38,7 @@ span.title{
 	font-size: 48pt;
 	display: inline-block;
 	
-	width: 35px;
+	width: 35%;
 	overflow-x: auto;
 	
 	position: absolute;
@@ -54,6 +54,8 @@ ul#nav{
 	padding: 0;
 	height: 100%;
 	display: inline-block;
+	
+	text-align: right;
 	
 	width: 60%;
 	overflow-x: auto;
@@ -97,6 +99,10 @@ ul#nav > li > span.text{
 	left: 50%;
 	transform: translate( -50%, -50% );
 	-webkit-transform: translate( -50%, -50% );
+}
+
+ol.number{
+	list-style-type: decimal;
 }
 
 /* Dialogs */
@@ -316,7 +322,7 @@ div.zone > ul{
 div.zone > ul > li{
 	margin: 5px 0;
 }
-div.zone > ul > li::before{
+div.zone > ul:not(.exempt) > li::before{
 	content: '>';
 	color: #555;
 	margin-right: 10px;

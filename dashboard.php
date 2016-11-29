@@ -2,6 +2,7 @@
 	session_start();
 	
 	require('php-bin/db.inc.php');
+	require('php-bin/global.php');
 	
 	$logged_in = isset( $_SESSION['User'] );
 	
@@ -29,20 +30,23 @@
 		header('Location: index.php');
 		exit();
 	}
+
+	$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF -- Scoreboard</title>
+		<title><?php echo htmlentities(CTF_NAME); ?> -- Scoreboard</title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="dashboard.css" />
 		<script src="home.js"></script>
 		<script src="dashboard.js"></script>
 	</head>
 	<body>
 		<div id="head">
 			<span class="title">
-				Disparity CTF
+				<?php echo htmlentities(CTF_NAME); ?>
 			</span>
 			<ul id="nav">
 				<li onclick="location.assign('account.php')"><span class="text">Account</span></li>
@@ -62,6 +66,37 @@
 				</ul>
 			</div>
 			<div class="zone">
+				<h2>Teams</h2>
+				<hr />
+				<ul>
+					<li><a href="#" onclick="Data.ShowDialog('CreateTeam')">Create Team</a></li>
+				</ul>
+				<h2>Team List</h2>
+				<hr />
+				<ul class="exempt">
+					<?php
+						$teamquery = "SELECT * FROM `teams`";
+						$res = $conn -> query( $teamquery );
+
+						if( !$res ){
+							echo "<li><i>No teams created.</i></li>";
+						}else{
+							$row = $res -> fetch_assoc();
+							if( !isset($row) ){
+								echo "<li><i>No teams created.</i></li>";
+							}else{
+								$counter = 1;
+								do{
+									$steam = htmlentities($row["name"]);
+									echo "<li>${counter}. ${steam}</li>";
+									$counter += 1;
+								}while( ($row = $res -> fetch_assoc()) );
+							}
+						}
+					?>
+				</ul>
+			</div>
+			<div class="zone">
 				<h2>Users</h2>
 				<hr />
 				<div class="table">
@@ -73,56 +108,70 @@
 					<hr />
 					<div id="tbody">
 						<?php
-							$conn = new mysqli( DB_HOST, DB_USER, DB_PASS, 'users' );
-							
 							$tquery = "SELECT * FROM `users`";
 							$res = $conn -> query( $tquery );
 							
+							$skip = false;
+							$fail = "";
 							if( !$res ){
-								die('Could not fetch user data.');
+								$skip = true;
+								$fail = "Could not load user data.";
 							}
+
+							if( !$skip ){
 							
-							$row = $res -> fetch_assoc();
-							if( !$row ){
-								die('No users registered yet!');
-							}
-							
-							$counter = 1;
-							
-							do{ //Second effective use of do-while loop!
-								$name = htmlentities($row['name']);
-								$email = htmlentities($row['email']);
-								$rawrole = htmlentities($row['role']);
-								$role = "&lt;NA&gt;";
-								switch($rawrole){
-								case 'admin':
-									$role = "Administrator";
-									break;
-								case 'competitor':
-									$role = "Competitor";
-									break;
-								case 'spectator':
-									$role = "Spectator";
-									break;
+								$row = $res -> fetch_assoc();
+								if( !$row ){
+									$skip = true;
+									$fail = "No users registered yet!";
 								}
-								$id = htmlentities($row['user_id']);
 								
-								echo <<<HTML
+								$counter = 1;
+								
+								do{ //Second effective use of do-while loop!
+									if( $skip ) break;
+									$name = htmlentities($row['name']);
+									$email = htmlentities($row['email']);
+									$rawrole = htmlentities($row['role']);
+									$role = "&lt;NA&gt;";
+									switch($rawrole){
+									case 'admin':
+										$role = "Administrator";
+										break;
+									case 'competitor':
+										$role = "Competitor";
+										break;
+									case 'spectator':
+										$role = "Spectator";
+										break;
+									}
+									$id = htmlentities($row['user_id']);
+									
+									echo <<<HTML
 <div>
 	<div class="cell">#$id: $name</div>
 	<div class="cell">$email</div>
 	<div class="cell role" onclick="ManageRole($id, '$name')">$role</div>
 </div>
 HTML;
-								$counter += 1;
-							}while( ($row = $res -> fetch_assoc()) );
+									$counter += 1;
+								}while( ($row = $res -> fetch_assoc()) );
+							}
+
+							if( $skip ){
+								echo <<<HTML
+<div>
+	<div class="cell">An error occurred! $fail</div>
+</div>
+HTML;
+							}
 						?>
 					</div>
 			</div>
 			</div>
 		</div>
 		<footer>
-			Designed 2015 by IS44CQU4RK of M350N Studios.
+			<?php echo FOOTER; ?>
 		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="ChangeRole">
@@ -150,6 +199,27 @@ HTML;
 						</tbody>
 					</table>
 					<button type="submit" class="submit">Change Role</button>
+				</form>
+			</div>
+			<div class="popup" data-dlg="CreateTeam">
+				<div class="title">
+					Create Team
+					<img src="x.png" class="closer" onclick="Data.HideDialog('CreateTeam')" />
+				</div>
+				<form onsubmit="DashboardData.Dialogs.CreateTeam.create(event)" id="create_team">
+					<table>
+						<tbody>
+							<tr>
+								<td>Team Code:</td>
+								<td><input type="text" name="code" /></td>
+							</tr>
+							<tr>
+								<td>Team Name:</td>
+								<td><input type="text" name="name" ></td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="submit" class="submit">Create</button>
 				</form>
 			</div>
 			<div class="popup" data-dlg="Success">

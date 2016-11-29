@@ -2,6 +2,7 @@
 	session_start();
 	
 	require('php-bin/db.inc.php');
+	require('php-bin/global.php');
 	
 	$logged_in = isset($_SESSION['User']);
 	
@@ -34,7 +35,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Disparity CTF -- Scoreboard</title>
+		<title><?php echo htmlentities(CTF_NAME); ?> -- Scoreboard</title>
 		<link href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="style.css" />
 		<script src="home.js"></script>
@@ -43,7 +44,7 @@
 	<body>
 		<div id="head">
 			<span class="title">
-				Disparity CTF
+				<?php echo htmlentities(CTF_NAME); ?>
 			</span>
 			<ul id="nav">
 				<?php
@@ -119,7 +120,7 @@ HTML;
 			</div>
 		</div>
 		<footer>
-			Designed 2015 by IS44CQU4RK of M350N Studios.
+			<?php echo FOOTER; ?>
 		</footer>
 		<div id="dialogs" class="modal">
 			<div class="popup" data-dlg="Login">
